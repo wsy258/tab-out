@@ -28,6 +28,7 @@ body {
   color: var(--ink);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  font-size: 16px;
 }
 
 /* Subtle paper texture */
@@ -67,7 +68,7 @@ header {
 .header-left h1 {
   font-family: 'Newsreader', serif;
   font-weight: 300;
-  font-size: 28px;
+  font-size: 30px;
   letter-spacing: -0.5px;
   color: var(--ink);
   margin-bottom: 4px;
@@ -196,7 +197,7 @@ header {
 .section-header h2 {
   font-family: 'Newsreader', serif;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 19px;
   font-style: italic;
   color: var(--muted);
   white-space: nowrap;

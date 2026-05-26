@@ -588,6 +588,30 @@ const FRIENDLY_DOMAINS = {
   'local-files':          'Local Files',
 };
 
+// 8 beautiful color themes for random assignment
+const COLOR_THEMES = [
+  { text: '#24292f', bg: 'linear-gradient(135deg, #e6f7ff, #bae7ff)' },    // Blue
+  { text: '#cf1322', bg: 'linear-gradient(135deg, #fff1f0, #ffa39e)' },    // Red
+  { text: '#389e0d', bg: 'linear-gradient(135deg, #f6ffed, #95de64)' },    // Green
+  { text: '#722ed1', bg: 'linear-gradient(135deg, #f9f0ff, #d3adf7)' },    // Purple
+  { text: '#fa8c16', bg: 'linear-gradient(135deg, #fff7e6, #ffd591)' },    // Orange
+  { text: '#13c2c2', bg: 'linear-gradient(135deg, #e6fffb, #87e8de)' },    // Cyan
+  { text: '#eb2f96', bg: 'linear-gradient(135deg, #fff0f6, #ffadd2)' },    // Pink
+  { text: '#597ef7', bg: 'linear-gradient(135deg, #f0f5ff, #adc6ff)' }     // Indigo
+];
+
+// Simple hash function to get consistent color for same domain
+function hashDomainToColor(domain) {
+  let hash = 0;
+  for (let i = 0; i < domain.length; i++) {
+    const char = domain.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  const index = Math.abs(hash) % COLOR_THEMES.length;
+  return COLOR_THEMES[index];
+}
+
 function friendlyDomain(hostname) {
   if (!hostname) return '';
   if (FRIENDLY_DOMAINS[hostname]) return FRIENDLY_DOMAINS[hostname];
@@ -805,6 +829,10 @@ function renderDomainCard(group) {
   const tabCount  = tabs.length;
   const isLanding = group.domain === '__landing-pages__';
   const stableId  = 'domain-' + group.domain.replace(/[^a-z0-9]/g, '-');
+  const domainName = isLanding ? 'Homepages' : (group.label || friendlyDomain(group.domain));
+
+  // Get consistent color theme for this domain using hash
+  const colorTheme = hashDomainToColor(domainName);
 
   // Count duplicates (exact URL match)
   const urlCounts = {};
@@ -879,10 +907,10 @@ function renderDomainCard(group) {
 
   return `
     <div class="mission-card domain-card ${hasDupes ? 'has-amber-bar' : 'has-neutral-bar'}" data-domain-id="${stableId}">
-      <div class="status-bar"></div>
+      <div class="status-bar" style="background: ${colorTheme.text}"></div>
       <div class="mission-content">
         <div class="mission-top">
-          <span class="mission-name">${isLanding ? 'Homepages' : (group.label || friendlyDomain(group.domain))}</span>
+          <span class="mission-name" style="color: ${colorTheme.text}; background: ${colorTheme.bg}; padding: 4px 12px; border-radius: 20px; font-weight: 700;">${domainName}</span>
           ${tabBadge}
           ${dupeBadge}
         </div>
